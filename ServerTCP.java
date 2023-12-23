@@ -45,6 +45,16 @@ public class ServerTCP {
         String currentTime = getCurrentTimeReceive();
         System.out.println(currentTime + message);
     }
+    
+    public static void sendResultToClient(BufferedWriter out, String status) {
+        try {
+            out.write(status);
+            out.newLine();
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static int gcd(int a, int b) {
         if (b == 0) {
@@ -102,7 +112,9 @@ public class ServerTCP {
                                 boolean checkResult = dis.readInt() == (a + b) && dis.readInt() == a * b && dis.readInt() == gcd(a, b) && dis.readInt() == lcd(a, b);
                                 String status = checkResult ? "OK" : "False";
                                 Logs("respone client " + client.getInetAddress() + " status: " + status);
-                            } //________________________________________Dạng Input/OutputStream________________________________________________
+                                sendResultToClient(write, "respone client " + client.getInetAddress() + " status: " + status);
+                            } 
+                            //________________________________________Dạng Input/OutputStream________________________________________________
                             else if (question.contains("700")) {
                                 String data = "6164561|618093|121451|8909|877264|67874|8900|9000|121451|8909|877264|67874|8900|9000";
                                 String[] numbers = data.split("\\|");
@@ -119,6 +131,7 @@ public class ServerTCP {
                                 String ans = new String(buffer, 0, bytesReader);
                                 String status = sum == Integer.parseInt(ans) ? "OK" : "False";
                                 Logs("respone client " + client.getInetAddress() + " status: " + status);
+                                sendResultToClient(write, "respone client " + client.getInetAddress() + " status: " + status);
                             } else if (question.contains("701")) {
                                 String[] data = {
                                     "4705100|5249894|3926116|4285120|5824979|4554566|4987268|4575377|5356057|5262092|5249894|3926116|4285120|5824979|4554566|4987268|4575377|5356057|5262092",
@@ -165,7 +178,9 @@ public class ServerTCP {
                                 }
 
                                 Logs("respone client " + client.getInetAddress() + " status: " + status);
-                            } //________________________________________Dạng BufferedRead/Write________________________________________________
+                                sendResultToClient(write, "respone client " + client.getInetAddress() + " status: " + status);
+                            }
+                            //________________________________________Dạng BufferedRead/Write________________________________________________
                             else if (question.contains("600")) {
                                 String domains = "2eVFUJl4Z5.vn, s0ANOutx.vn, UwfCsjbQhM.com,jagfjha.edu,kjahfjaf.edu, dQlYBFX8.net, qLK8bpOiOKHW.io, B9KJzd.vn, JBaYY.vn, PxLH4tcuWczYfN.edu, y6qMOW4rYSy.vn, M9n1UJ.com, qMP5qqG.ed";
                                 String[] listDomain = domains.split(",");
@@ -188,7 +203,9 @@ public class ServerTCP {
                                 Logs("ans: " + ans + "\nclient send: " + res);
                                 String status = ans.equals(res) ? "OK" : "False";
                                 Logs("respone client " + client.getInetAddress() + " status: " + status);
-                            } //________________________________________Object_______________________________________
+                                sendResultToClient(write, "respone client " + client.getInetAddress() + " status: " + status);
+                            }
+                            //________________________________________Object_______________________________________
                             else if (question.contains("500")) {
                                 Student student = new Student();
                                 student.setName("John");
@@ -202,7 +219,7 @@ public class ServerTCP {
                                 Student res = (Student) ois.readObject();
                                 String status = res.getAge() == 22 ? "OK" : "False";
                                 Logs("respone client " + client.getInetAddress() + " status: " + status);
-
+                                sendResultToClient(write, "respone client " + client.getInetAddress() + " status: " + status);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
